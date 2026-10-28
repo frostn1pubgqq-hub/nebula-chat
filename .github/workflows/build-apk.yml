@@ -29,6 +29,8 @@ jobs:
       - name: Build Android APK
         working-directory: source/nebula-chat/client
         run: |
+          echo "VITE_API_URL=https://nebula-chat-2.onrender.com" > .env
+          echo "VITE_SOCKET_URL=https://nebula-chat-2.onrender.com" >> .env
           npm install
           npm install @capacitor/core @capacitor/android
           npm install --save-dev @capacitor/cli
@@ -40,17 +42,6 @@ jobs:
       - name: Fix Kotlin dependency conflict
         working-directory: source/nebula-chat/client/android
         run: |
-
-
-
-
-
-
-
-
-
-        echo "VITE_API_URL=https://nebula-chat-2.onrender.com" > .env
-          echo "VITE_SOCKET_URL=https://nebula-chat-2.onrender.com" >> .env
           cat >> build.gradle <<'EOF'
           allprojects {
             configurations.configureEach {
