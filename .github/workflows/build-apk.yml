@@ -36,7 +36,26 @@ jobs:
           npx cap init "Nebula Chat" "com.nebulachat.app" --web-dir=dist
           npx cap add android
           npx cap sync android
-          cd android
+
+      - name: Fix Kotlin dependency conflict
+        working-directory: source/nebula-chat/client/android
+        run: |
+          cat >> build.gradle <<'EOF'
+          allprojects {
+            configurations.configureEach {
+              resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == "org.jetbrains.kotlin" &&
+                    details.requested.name == "kotlin-stdlib-jdk8") {
+                  details.useVersion "1.8.22"
+                }
+              }
+            }
+          }
+          EOF
+
+      - name: Build debug APK
+        working-directory: source/nebula-chat/client/android
+        run: |
           chmod +x gradlew
           ./gradlew assembleDebug
 
